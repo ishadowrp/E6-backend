@@ -37,11 +37,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # Подключаем пакет all-auth
 
     'rest_framework',
+    'rest_framework.authtoken',  # приложения для генерации токена авторизации на стороне сервера
+    'allauth',  # Подключаем пакет all-auth
+    'allauth.account',  # Подключаем пакет all-auth
+    'allauth.socialaccount',  # Подключаем пакет all-auth
+    'dj_rest_auth',  # Для реализации авторизации пользователей через API используем стороний пакет - dj_rest_auth
+    'dj_rest_auth.registration',  # Подключаем пакет all-auth
+    'drf_yasg',  # UI документация к API (аналог swagger)
 
     'chats',
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Подключаем пакет all-auth
+SITE_ID = 1 # Подключаем пакет all-auth
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
