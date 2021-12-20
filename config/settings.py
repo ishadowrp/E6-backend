@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'dj_rest_auth',  # Для реализации авторизации пользователей через API используем стороний пакет - dj_rest_auth
     'dj_rest_auth.registration',  # Подключаем пакет all-auth
     'drf_yasg',  # UI документация к API (аналог swagger)
+    "corsheaders", # CORS заголовок, чтоб принимать запросы
 
     'chats',
 ]
@@ -57,11 +58,13 @@ SITE_ID = 1 # Подключаем пакет all-auth
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    "corsheaders.middleware.CorsMiddleware" ,
+    "django.middleware.common.CommonMiddleware" ,
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -114,6 +117,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOWED_ORIGINS  =  [
+    "https://example.com" ,
+    "https://sub.example.com" ,
+    "http://localhost:8080" ,
+    "http://127.0.0.1:9000" ,
+    'http://localhost:63343',
+]
+
+CORS_URLS_REGEX  =  r"^/api/.*$"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
