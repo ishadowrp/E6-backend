@@ -7,12 +7,6 @@ class ChatSerializer(serializers.ModelSerializer):
         fields = ('id', 'owner', 'title', 'chat_users', 'date_created',)
         model = Chat
 
-class ChatUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = ('id', 'chat_users',)
-        model = Chat
-
-
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('id', 'author', 'chat', 'date_posted', 'content',)
@@ -22,3 +16,17 @@ class UserSerializer(serializers.ModelSerializer): # Для подключени
     class Meta:
         model = get_user_model()
         fields = ('id', 'username',)
+
+# class ChatUserSerializer(serializers.ModelSerializer):
+#
+#     chat = serializers.IntegerField()
+#     chat_users = serializers.ListField(
+#         child = serializers.IntegerField()
+#         )
+#     messages = serializers.ListField(
+#         child = serializers.DictField(
+#             child = serializers.IntegerField()
+#         )
+#     )
+
+

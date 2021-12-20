@@ -2,15 +2,15 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets, permissions, generics # new
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from django.http import Http404
 from .models import Chat, Message
 from .permissions import IsUserOrReadOnly, IsOwnerOrReadOnly
-from .serializers import ChatSerializer, MessageSerializer, UserSerializer, ChatUserSerializer
+from .serializers import ChatSerializer, MessageSerializer, UserSerializer#, ChatUserSerializer
+
 
 class ChatJoinViewSet(APIView):
     permissions_classes = (permissions.IsAuthenticated,)
-    serializer_class = ChatUserSerializer
+    # serializer_class = ChatUserSerializer
 
     def get_object(self, pk):
         try:
@@ -21,6 +21,10 @@ class ChatJoinViewSet(APIView):
     def get(self, request, pk):
         chat = self.get_object(pk)
         messages = Message.objects.filter(chat__id=pk)
+        if request.user in chat.chat_users.all():
+            pass
+        else:
+            chat.chat_users.add(request.user)
 
         listOfMessage = []
         for item in messages:
@@ -34,11 +38,6 @@ class ChatJoinViewSet(APIView):
         dictResponse = {'chat': pk, 'chat_users': listMembers, 'messages': listOfMessage}
 
         return Response(dictResponse)
-
-    def put(self, request, pk):
-        chat = self.get_object(pk)
-        chat.chat_users.add(request.user)
-        return Response({'status': 'ok'})
 
 class ChatViewSet(viewsets.ModelViewSet): # new
     permission_classes = (IsOwnerOrReadOnly, permissions.IsAuthenticated,)
