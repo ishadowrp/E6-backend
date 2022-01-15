@@ -19,3 +19,4 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
         # Write permissions are only allowed to the author of a chat
         return obj.owner == request.user
+

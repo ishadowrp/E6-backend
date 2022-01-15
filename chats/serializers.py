@@ -6,6 +6,9 @@ class ChatSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('id', 'owner', 'title', 'chat_users', 'date_created', 'description')
         model = Chat
+        extra_kwargs = {'owner': {'required': False},
+                        'chat_users': {'required': False}
+                        }
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
