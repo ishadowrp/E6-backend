@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model # Для подключения к API пользователей
 from rest_framework import serializers
-from .models import Chat, Message
+from .models import Chat, Message, ProfileData
 
 class ChatSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +19,13 @@ class UserSerializer(serializers.ModelSerializer): # Для подключени
     class Meta:
         model = get_user_model()
         fields = ('id', 'username',)
+
+class ProfileDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfileData
+        fields = ('owner', 'avatar_photo')
+        extra_kwargs = {'owner': {'required': False}
+                        }
 
 # class ChatUserSerializer(serializers.ModelSerializer):
 #

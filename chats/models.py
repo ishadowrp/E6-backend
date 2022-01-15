@@ -17,3 +17,6 @@ class Message(models.Model):
     date_posted = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
 
+class ProfileData(models.Model):
+    owner = models.ForeignKey(User, related_name = 'photo_owner',on_delete=models.CASCADE)
+    avatar_photo = models.ImageField(upload_to='photos', max_length=254)

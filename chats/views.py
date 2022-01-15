@@ -3,9 +3,9 @@ from rest_framework import viewsets, permissions, generics # new
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import Http404
-from .models import Chat, Message
+from .models import Chat, Message, ProfileData
 from .permissions import IsUserOrReadOnly, IsOwnerOrReadOnly
-from .serializers import ChatSerializer, MessageSerializer, UserSerializer#, ChatUserSerializer
+from .serializers import ChatSerializer, MessageSerializer, UserSerializer, ProfileDataSerializer#, ChatUserSerializer
 
 
 class ChatJoinViewSet(APIView):
@@ -58,8 +58,16 @@ class MessageViewSet(viewsets.ModelViewSet): # new
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-
 class UserViewSet(viewsets.ModelViewSet): # new
     permission_classes = (IsUserOrReadOnly, permissions.IsAuthenticated,)
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
+
+class ProfileDataViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsOwnerOrReadOnly, permissions.IsAuthenticated,)
+    queryset = ProfileData.objects.all()
+    serializer_class = ProfileDataSerializer
+
+    def perform_create(self, serializer):
+        # here you will send `created_by` in the `validated_data`
+        serializer.save(owner=self.request.user)
