@@ -52,6 +52,9 @@ INSTALLED_APPS = [
     'chats',
 ]
 
+MEDIA_URL = '/media/' # new
+MEDIA_ROOT = str(BASE_DIR.joinpath('media')) # new
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Подключаем пакет all-auth
 SITE_ID = 1 # Подключаем пакет all-auth
 

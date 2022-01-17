@@ -64,7 +64,7 @@ class UserViewSet(viewsets.ModelViewSet): # new
     serializer_class = UserSerializer
 
 class ProfileDataViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsOwnerOrReadOnly, permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
     queryset = ProfileData.objects.all()
     serializer_class = ProfileDataSerializer
 

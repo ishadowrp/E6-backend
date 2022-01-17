@@ -11,5 +11,6 @@ router.register('chats', ChatViewSet, basename='chats')
 
 urlpatterns = router.urls
 urlpatterns.append(path('chat/join/<int:pk>/', ChatJoinViewSet.as_view()),)
+urlpatterns.append(path('', ChatJoinViewSet.as_view()),)
 
 urlpatterns = format_suffix_patterns(urlpatterns)
