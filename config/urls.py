@@ -39,9 +39,9 @@ schema_view = get_schema_view( # Схема для UI документации
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('chats.urls')),
+    # path('chat/', include('rooms.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('api/v1/dj-rest-auth/', include('dj_rest_auth.urls')),
-
     # Для настройки подключения авторизации подключаем роутинг
     path('api/v1/dj-rest-auth/registration/',
          include('dj_rest_auth.registration.urls')),  # Для подключения all-auth для регистрации пользователей

@@ -47,9 +47,11 @@ INSTALLED_APPS = [
     'dj_rest_auth',  # Для реализации авторизации пользователей через API используем стороний пакет - dj_rest_auth
     'dj_rest_auth.registration',  # Подключаем пакет all-auth
     'drf_yasg',  # UI документация к API (аналог swagger)
-    "corsheaders", # CORS заголовок, чтоб принимать запросы
+    "corsheaders",  # CORS заголовок, чтоб принимать запросы
+    'channels',
 
     'chats',
+    'rooms',
 ]
 
 MEDIA_URL = '/media/' # new
@@ -87,6 +89,17 @@ TEMPLATES = [
         },
     },
 ]
+
+# Channels
+ASGI_APPLICATION = 'config.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
