@@ -1,7 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 import datetime
-from chats.models import ProfileData
+from chats.models import ProfileData, Message, Chat
 from channels.db import database_sync_to_async
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -40,6 +40,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'message': message
             }
         )
+        await self.create_message(message)
 
     # Receive message from room group
     async def chat_message(self, event):
@@ -53,3 +54,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except ObjectDoesNotExist:
             profile = 'none'
         return profile
+
+    @database_sync_to_async
+    def create_message(self, message):
+        try:
+            chat = Chat.objects.get(id = int(self.room_name))
+            Message.objects.create(chat = chat, author = self.scope["user"], content = message)
+        except ObjectDoesNotExist:
+            print('chat not found')
+

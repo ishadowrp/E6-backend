@@ -4,7 +4,7 @@ from .models import Chat, Message, ProfileData
 
 class ChatSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('id', 'owner', 'title', 'chat_users', 'date_created', 'description')
+        fields = ('id', 'owner', 'title', 'chat_users', 'date_created', 'description',)
         model = Chat
         extra_kwargs = {'owner': {'required': False},
                         'chat_users': {'required': False}
@@ -23,9 +23,9 @@ class UserSerializer(serializers.ModelSerializer): # Для подключени
 class ProfileDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfileData
-        fields = ('owner', 'avatar_photo')
-        extra_kwargs = {'owner': {'required': False}
-                        }
+        fields = ('owner', 'avatar_photo',)
+        extra_kwargs = {'owner': {'required': False}}
+        lookup_field = 'owner'
 
 # class ChatUserSerializer(serializers.ModelSerializer):
 #

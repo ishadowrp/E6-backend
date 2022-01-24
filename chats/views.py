@@ -1,4 +1,6 @@
 from django.contrib.auth import get_user_model
+# from django.http.multipartparser import MultiPartParser
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import viewsets, permissions, generics # new
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -6,7 +8,7 @@ from django.http import Http404
 from .models import Chat, Message, ProfileData
 from .permissions import IsUserOrReadOnly, IsOwnerOrReadOnly
 from .serializers import ChatSerializer, MessageSerializer, UserSerializer, ProfileDataSerializer#, ChatUserSerializer
-
+from rest_framework import status
 
 class ChatJoinViewSet(APIView):
     permissions_classes = (permissions.IsAuthenticated,)
@@ -28,14 +30,14 @@ class ChatJoinViewSet(APIView):
 
         listOfMessage = []
         for item in messages:
-            dictMessage = {'author': item.author.id, 'date_posted': item.date_posted, 'content': item.content}
+            dictMessage = {'author': item.author.username, 'author_id':item.author.pk, 'date_posted': item.date_posted.strftime("%d-%m-%Y %H:%M:%S"), 'content': item.content}
             listOfMessage.append(dictMessage)
 
         listMembers = []
         for usr in chat.chat_users.all():
             listMembers.append({'id': usr.id, 'username': usr.username})
 
-        dictResponse = {'chat': pk, 'chat_users': listMembers, 'messages': listOfMessage}
+        dictResponse = {'chat': pk, 'title': chat.title, 'chat_users': listMembers, 'messages': listOfMessage}
 
         return Response(dictResponse)
 
@@ -67,6 +69,29 @@ class ProfileDataViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = ProfileData.objects.all()
     serializer_class = ProfileDataSerializer
+    lookup_field = 'owner'
+    # def get(self, request):
+    #     owner_id = int(request.query_params.__getitem__('id'))
+    #     print(owner_id)
+    #     try:
+    #         photo_profile = ProfileData.objects.get(owner__pk=owner_id)
+    #         serializer = ProfileDataSerializer(photo_profile)
+    #         return Response(serializer.data, status=status.HTTP_200_OK)
+    #     except ProfileData.DoesNotExist:
+    #         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class UserAvatarUpload(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    parser_classes = [MultiPartParser, FormParser]
+    serializer_class = ProfileDataSerializer
+
+    def post(self, request, format=None):
+        serializer = ProfileDataSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
         # here you will send `created_by` in the `validated_data`

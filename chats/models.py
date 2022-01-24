@@ -20,3 +20,7 @@ class Message(models.Model):
 class ProfileData(models.Model):
     owner = models.ForeignKey(User, related_name = 'photo_owner',on_delete=models.CASCADE)
     avatar_photo = models.ImageField(upload_to='photos', max_length=254)
+    # @property
+    # def owner_id(self):
+    #     return self.owner.pk
+
