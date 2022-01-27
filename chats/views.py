@@ -10,6 +10,7 @@ from .permissions import IsUserOrReadOnly, IsOwnerOrReadOnly
 from .serializers import ChatSerializer, MessageSerializer, UserSerializer, ProfileDataSerializer, \
     PrivateChatSerializer  # , ChatUserSerializer, PrivateChatSerializer
 from rest_framework import status
+import json
 
 class ChatJoinViewSet(APIView):
     permissions_classes = (permissions.IsAuthenticated,)
@@ -43,15 +44,24 @@ class ChatJoinViewSet(APIView):
         return Response(dictResponse)
 
 class ChatViewSet(viewsets.ModelViewSet): # new
-    permission_classes = (IsOwnerOrReadOnly, permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
 
     def perform_create(self, serializer):
         # here you will send `created_by` in the `validated_data`
-        first_member_list = []
-        first_member_list.append(self.request.user)
-        serializer.save(owner=self.request.user, chat_users = first_member_list)
+        strData = json.dumps(self.request.data)
+        data = json.loads(strData)
+        if not data['private']:
+            first_member_list = []
+            first_member_list.append(self.request.user)
+            serializer.save(owner=self.request.user, chat_users = first_member_list)
+        else:
+            first_member_list = []
+            users = get_user_model()
+            for userID in data['chat_users']:
+                first_member_list.append(users.objects.get(pk=int(userID)))
+            serializer.save(owner=self.request.user, chat_users = first_member_list)
 
 class PrivateChatViewSet(viewsets.ModelViewSet): # new
     permission_classes = (IsOwnerOrReadOnly, permissions.IsAuthenticated,)
