@@ -93,15 +93,6 @@ class ProfileDataViewSet(viewsets.ModelViewSet):
     queryset = ProfileData.objects.all()
     serializer_class = ProfileDataSerializer
     lookup_field = 'owner'
-    # def get(self, request):
-    #     owner_id = int(request.query_params.__getitem__('id'))
-    #     print(owner_id)
-    #     try:
-    #         photo_profile = ProfileData.objects.get(owner__pk=owner_id)
-    #         serializer = ProfileDataSerializer(photo_profile)
-    #         return Response(serializer.data, status=status.HTTP_200_OK)
-    #     except ProfileData.DoesNotExist:
-    #         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class UserAvatarUpload(APIView):
     permission_classes = (permissions.IsAuthenticated,)
